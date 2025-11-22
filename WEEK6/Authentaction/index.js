@@ -58,24 +58,18 @@ app.post("/signin", function(req, res){
 
 });
 
-app.get("/me", function(req, res){
-    const token= req.headers.token
-    const founduser=null
 
-    for(let i=0; i<users.length; i++){
-        if(users[i].token==token){
-            founduser=users[i];
-        }
-    }
 
-    if(founduser){
-        res.json({
-            username: founduser.username,
-            password:founduser.password
+app.get("/me", (req, res) => {
+    const token = req.headers.authorization;
+    const user = users.find(user => user.token === token);
+    if (user) {
+        res.send({
+            username: user.username
         })
-    } else{
-        res.json({
-            message:"token invalid"
+    } else {
+        res.status(401).send({
+            message: "Unauthorized"
         })
     }
 })
