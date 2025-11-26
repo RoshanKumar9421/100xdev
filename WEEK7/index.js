@@ -6,18 +6,18 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = "MaiNahiBataunga"
 const mongoose = require("mongoose")
 
-mongoose.connect("mongodb+srv://admin:rohandev123@cluster0.wm8zj.mongodb.net/todo-app")                 //.net/DATABASE_Name - idhar agar koi new database k name add krenge toh woh create kr dega aur existing mein chahiye toh uska name add kr do 
+mongoose.connect("mongodb+srv://yadavroshankumar8271_db_user:<RYJ06lnLFcSfRnaB>@cluster0.a2o3vtc.mongodb.net/todo-apps123")                 
 
 const app = express()
 
-app.use(express.json())                         //body ko parse krne k liye chahiye hota hai yeh
+app.use(express.json())                         
 
 app.post("/signup", async function(req, res){
-    const email = req.body.email;               //yaha body pe req ja rha hai isliye eisko parse krna hai 
+    const email = req.body.email;               
     const password = req.body.password;
     const name = req.body.name;
     
-    await UserModel.create({                    //isko await isliye kiye may be error ho skta hai like user idhar input diya nhi but res.json se message phle mil jaye isliye isko await kiye jisse woh phle data le le phr woh res.json ka message show krega..warna await ni krenge toh then if database connect nhi hoga phr bhi woh message return kr dega 
+    await UserModel.create({                    
         email: email,
         password: password,
         name: name
@@ -33,14 +33,14 @@ app.post("/signin", async function(req, res){
     const email = req.body.email;
     const password = req.body.password;
 
-    const user = await UserModel.findOne({              //userModel se search krega ki yeh username & password...and usko user variable pe store krega and isko bhi await krwana pdega ..kyuki all database call had to be awaited 
+    const user = await UserModel.findOne({              
         email: email,
         password: password
     })
 
-    if(user){                                           //if uses is there ..then generate the jwt token
+    if(user){                                          
         const token = jwt.sign({
-            id: user._id.toString()                      //sare users ka ek id hoga User collection mai jo sabke liye alg hoga ..isliye is barr hmlog user._id ko sign krenge aur token generate idhar se krwaynge...aur isko string mein convert kr rhe hai..kyuki id mongoDb mein object ID hota hai 
+            id: user._id.toString()                     
         }, JWT_SECRET);
         res.json({
             token: token
@@ -54,12 +54,12 @@ app.post("/signin", async function(req, res){
 });
 
 
-//jaise hi middleware sab kuch pass kr dega so the controll will reach here in todo and todos routes
-app.post("/todo", auth, async function(req, res){          //Yeh todos ko add krne ke liye hai 
-    const userId = req.userId;                      //middleware ke pass se jo req.userId jispe decodedData ka id hai woh idhr pass on hua 
-    const title = req.body.title                    //yaha se title input denge 
-    await TodoModel.create({                        //database call isliye await kiye
-        title,                                      //TodoModel wale collection mein yeh create ho jyega 
+
+app.post("/todo", auth, async function(req, res){          
+    const userId = req.userId;                       
+    const title = req.body.title                  
+    await TodoModel.create({                        
+        title,                                     
         userId,
         done
     })
@@ -68,26 +68,26 @@ app.post("/todo", auth, async function(req, res){          //Yeh todos ko add kr
     })
 });
 
-app.get("/todos", auth, async function(req, res){           //yeh kaunsa todo kis user ka hai woh return krne k liye..ki like kaunsa userId pe kya kya todo hai yeh btayega woh
-    const userId = req.userId;                              //middleware ke pass se jo req.userId jispe decodedData ka id hai woh idhr pass on hua 
+app.get("/todos", auth, async function(req, res){           
+    const userId = req.userId;                              
     
-    const todos = await TodoModel.find({                    //userId se woh todos ko search kr lega for this specific id provided to it
+    const todos = await TodoModel.find({                    
         userId
     })
     
     res.json({
-        todo                                                //todos jo milnge woh output pe milenge 
+        todo                                                
     })
 
 });
 
-function auth(req, res, next){                              //same auth fucntion which was used before 
+function auth(req, res, next){                              
     const token = req.headers.token
 
     const decodedData = jwt.verify(token, JWT_SECRET)
 
     if(decodedData){
-        req.userId = decodedData.id;                         //User Id ko decodedData se le rhe hia idhar 
+        req.userId = decodedData.id;                         
         next();
     }
     else{
