@@ -16,10 +16,12 @@ app.post("/signup", async function(req, res){
     const email = req.body.email;               
     const password = req.body.password;
     const name = req.body.name;
+
+    const hashedPassword = await bcrypt.hash(password,5);
     
     await UserModel.create({                    
         email: email,
-        password: password,
+        password: hashedPassword,
         name: name
     })
 
