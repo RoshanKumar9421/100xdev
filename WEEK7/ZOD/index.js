@@ -59,7 +59,10 @@ app.post("/signup", async function(req, res){
 
 });
 
-app.post("/signin", function(req, res){
+app.post("/signin", async function(req, res){
+  
+    const username= req.body.username;
+    const password= req.body.password;
 
 });
 
