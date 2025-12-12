@@ -58,7 +58,10 @@ app.post("/signin", function(req, res){
 
 });
 
-
+app.post("/todos", (req, res){
+    const add= req.query.add;
+    const remove=req.query.remove;
+})
 
 app.get("/me", (req, res) => {
     const token = req.headers.authorization;
