@@ -5,7 +5,7 @@ const userRouter=Router();
 
 userRouter.post("user/signup", function(req, res){
      res.json({
-        message:"signup endpoin"
+        message:"signup endpoint"
      })
 });
 
